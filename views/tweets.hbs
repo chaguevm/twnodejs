@@ -5,9 +5,9 @@
                     <div class="card-body">
                         <div class="h5"><a href="/profile/{{user.username}}"> @{{user.username}} </a></div>
                         <div class="h7 text-muted">Fullname : {{user.fullname}}</div>
-                        <div class="h7">Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
-                            etc.
-                        </div>
+                        <div class="h7">{{user.description}}</div>
+                        <hr>
+                        <a href="/follow/{{_user.id}}" class="btn btn-primary btn-sm"> Edit </a>
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">

@@ -53,6 +53,7 @@ app.use((req, res, next) => {
 //rutas
 app.use(require('./routes/'));
 app.use(require('./routes/authentication'));
+app.use(require('./routes/users'));
 app.use(require('./routes/tweets'));
 
 //Publico

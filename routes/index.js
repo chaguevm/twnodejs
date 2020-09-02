@@ -7,7 +7,7 @@ router.get('/', isLoggedIn, async (req, res) => {
     const user_id = req.user.id;
     const query = `SELECT * FROM tweets JOIN users ON user_id = users.id WHERE users.id = ${user_id} OR user_id = (SELECT user_followed FROM follows WHERE user_follower = ${user_id}) ORDER BY tweets.id DESC`
     const tweets = await pool.query(query);
-    try {        
+    try {
         const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${user_id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${user_id}) as following`;
         const stats = await pool.query(query);
         res.render('tweets', { tweets, stats: stats[0] });
@@ -32,7 +32,8 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
 
     getUser(username).then((result) => {
         profile = result;
-        if(profile !== undefined){
+        if (profile !== undefined) {
+            //Comprobar si el usuario logueado sigue al usuario que intenta consultar
             pool.query(`SELECT id FROM follows WHERE user_follower = ${req.user.id} AND user_followed = ${result.id}`, (err, result) => {
                 if (err) throw err;
                 if (req.user.id === profile.id)
@@ -52,12 +53,21 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
                     });
                 });
             });
-        }else{
+        } else {
             res.render('404');
         }
     }).catch(err => {
         throw err;
     });
+});
+
+router.post('/search', async (req, res) => {
+    const { search } = req.body;
+    const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${req.user.id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${req.user.id}) as following`;
+    const stats = await pool.query(query);
+    const users = await pool.query(`SELECT * FROM users WHERE username LIKE '%${search}%'`);
+    console.log(users);
+    res.render('search', { stats: stats[0], statics: users })
 });
 
 module.exports = router;
