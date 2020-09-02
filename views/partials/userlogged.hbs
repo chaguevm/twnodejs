@@ -1,0 +1,22 @@
+<div class="col-md-3">
+    <div class="card">
+        <div class="card-body">
+            <div class="h5"><a href="/profile/{{user.username}}"> @{{user.username}} </a></div>
+            <div class="h7 text-muted">Fullname : {{user.fullname}}</div>
+            <div class="h7">{{user.description}}</div>
+            <hr>
+            <a href="/follow/{{_user.id}}" class="btn btn-primary btn-sm"> Edit </a>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">
+                <div class="h6 text-muted"><a href="/followers/{{user.username}}"> Followers </a></div>
+                <div class="h5">{{stats.followers}}</div>
+            </li>
+            <li class="list-group-item">
+                <div class="h6 text-muted"><a href="/followings/{{user.username}}"> Following </a></div>
+                <div class="h5">{{stats.following}}</div>
+            </li>
+            <li class="list-group-item">Vestibulum at eros</li>
+        </ul>
+    </div>
+</div>

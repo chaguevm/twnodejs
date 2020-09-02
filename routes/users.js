@@ -22,9 +22,18 @@ router.get('/followers/:username', isLoggedIn, async (req, res) => {
     const { username } = req.params;
     const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${req.user.id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${req.user.id}) as following`;
     const stats = await pool.query(query);
-    const query2 = `SELECT follows.*, u1.username AS follower, u1.fullname AS followername, u1.description AS followerdesc, u2.username AS followed, u2.fullname AS followedname, u2.description AS followeddesc FROM follows JOIN users AS u1 ON u1.id = user_follower JOIN users AS u2 ON u2.id = user_followed WHERE u2.username = '${username}'`;
+    const query2 = `SELECT follows.*, u1.username, u1.fullname, u1.description FROM follows JOIN users AS u1 ON u1.id = user_follower JOIN users AS u2 ON u2.id = user_followed WHERE u2.username = '${username}'`;
     const followers = await pool.query(query2);
-    res.render('stats', {stats: stats[0], statics: followers});
+    res.render('search', {stats: stats[0], statics: followers});
+});
+
+router.get('/followings/:username', isLoggedIn, async (req, res) => {
+    const { username } = req.params;
+    const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${req.user.id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${req.user.id}) as following`;
+    const stats = await pool.query(query);
+    const query2 = `SELECT follows.*, u2.username, u2.fullname, u2.description FROM follows JOIN users AS u1 ON u1.id = user_follower JOIN users AS u2 ON u2.id = user_followed WHERE u1.username = '${username}'`;
+    const followeds = await pool.query(query2);
+    res.render('search', {stats: stats[0], statics: followeds});
 });
 
 module.exports = router;
