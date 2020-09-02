@@ -7,9 +7,9 @@ router.get('/', isLoggedIn, async (req, res) => {
     const tweets = await pool.query('SELECT * FROM tweets JOIN users ON user_id = users.id ORDER BY tweets.id DESC');
     try {
         const user_id = req.user.id;
-        const followers = await pool.query('SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ?', [user_id]);
-        const following = await pool.query('SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ?', [user_id]);
-        res.render('tweets', { tweets, followers: followers[0], following: following[0] });
+        const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${user_id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${user_id}) as following`;
+        const stats = await pool.query(query);
+        res.render('tweets', { tweets, stats: stats[0] });
     } catch (error) {
         console.error(err);
     }
@@ -33,9 +33,6 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
         profile = result;
         pool.query(`SELECT id FROM follows WHERE user_follower = ${req.user.id} AND user_followed = ${result.id}`, (err, result) => {
             if (err) throw err;
-            console.log(req.user.id);
-            console.log(profile.id);
-            console.log(result);
             if (req.user.id === profile.id)
                 isFollowing = true;
             else if (result.length > 0)
@@ -47,13 +44,9 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
             pool.query(query, (err, result) => {
                 if (err) throw err;
                 stats = result[0];
-                console.log("estadisticas");
-                console.log(stats);
                 pool.query(`SELECT * FROM tweets JOIN users ON user_id = users.id WHERE users.username = '${username}' ORDER BY tweets.id DESC `, (err, result) => {
                     if (err) throw err;
                     tweets = result;
-                    console.log('tweets');
-                    console.log(tweets);
                     res.render('usertweets', { tweets, _user: profile, stats });
                 });
             });

@@ -6,7 +6,6 @@ const { isLoggedIn } = require('../lib/auth');
 router.post('/tweet', async (req,res) => {
     //console.log(req.body);
     const tweet = await pool.query('INSERT INTO tweets SET ? ',[req.body]);
-    console.log(tweet);
     res.redirect('/');
 });
 
