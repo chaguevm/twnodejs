@@ -4,9 +4,10 @@ const pool = require('../database');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 
 router.get('/', isLoggedIn, async (req, res) => {
-    const tweets = await pool.query('SELECT * FROM tweets JOIN users ON user_id = users.id ORDER BY tweets.id DESC');
-    try {
-        const user_id = req.user.id;
+    const user_id = req.user.id;
+    const query = `SELECT * FROM tweets JOIN users ON user_id = users.id WHERE users.id = ${user_id} OR user_id = (SELECT user_followed FROM follows WHERE user_follower = ${user_id}) ORDER BY tweets.id DESC`
+    const tweets = await pool.query(query);
+    try {        
         const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${user_id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${user_id}) as following`;
         const stats = await pool.query(query);
         res.render('tweets', { tweets, stats: stats[0] });
@@ -40,7 +41,6 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
                     isFollowing = true;
                 else
                     isFollowing = false;
-
                 const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows JOIN users ON user_followed = users.id WHERE users.username = '${username}' ) AS followers, (SELECT COUNT(user_followed) as cant FROM follows JOIN users ON user_follower = users.id WHERE users.username = '${username}' ) AS followings`;
                 pool.query(query, (err, result) => {
                     if (err) throw err;
@@ -48,7 +48,7 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
                     pool.query(`SELECT * FROM tweets JOIN users ON user_id = users.id WHERE users.username = '${username}' ORDER BY tweets.id DESC `, (err, result) => {
                         if (err) throw err;
                         tweets = result;
-                        res.render('usertweets', { tweets, _user: profile, stats });
+                        res.render('usertweets', { tweets, _user: profile, stats, isFollowing });
                     });
                 });
             });

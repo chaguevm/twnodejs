@@ -4,7 +4,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="h5"><a href="/profile/{{_user.username}}"> @{{_user.username}} </a></div>
-                        <div class="h7 text-muted">Fullname : {{_user.fullname}} {{#unless isFollowing }}<a href="/follow" class="btn btn-primary"> Follow </a> {{/unless}}</div> 
+                        <div class="h7 text-muted">Fullname : {{_user.fullname}} {{#unless isFollowing }}<a href="/follow/{{_user.id}}" class="btn btn-primary"> Follow </a> {{/unless}}</div> 
                         <div class="h7">Developer of web applications, JavaScript, PHP, Java, Python, Ruby, Java, Node.js,
                             etc.
                         </div>
