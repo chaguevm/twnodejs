@@ -25,3 +25,9 @@ body {
     content: none;
     display: none;
 }
+
+.disableLink {
+    pointer-events: none;
+    cursor: default;
+    text-decoration: none;
+}

@@ -1,6 +1,7 @@
 const express = require ('express');
 const morgan = require('morgan');
 const exphbs = require('express-handlebars');
+const Handlebars = require('handlebars');
 const path = require('path');
 const flash = require('connect-flash');
 const session = require('express-session');
@@ -11,6 +12,13 @@ const passport = require('passport');
 //Inicialización
 const app = express();
 require('./lib/passport');
+
+Handlebars.registerHelper('ifCond', function(v1, v2, options) {
+    if(v1 === v2) {
+      return options.fn(this);
+    }
+    return options.inverse(this);
+});
 
 //Configuración
 app.use(express.static('./public/'));
@@ -23,7 +31,7 @@ app.engine('.hbs',exphbs({
     layoutsDir: path.join(app.get('views'), 'layaouts'), //ubicacion de los layaouts
     partialsDir: path.join(app.get('views'), 'partials'), //ubicacion de los partials
     extname: '.hbs', //extension
-    helpers: require('./lib/handlebars') //auxiliares
+    helpers: require('./lib/handlebars'), //auxiliares
 })); 
 app.set('view engine', '.hbs');
 
@@ -62,3 +70,4 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.listen(app.get('port'), () => {
     console.log('Servidor iniciado');
 });
+

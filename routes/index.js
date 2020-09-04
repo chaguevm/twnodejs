@@ -5,8 +5,13 @@ const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 
 router.get('/', isLoggedIn, async (req, res) => {
     const user_id = req.user.id;
-    const query = `SELECT * FROM tweets JOIN users ON user_id = users.id WHERE users.id = ${user_id} OR user_id = (SELECT user_followed FROM follows WHERE user_follower = ${user_id}) ORDER BY tweets.id DESC`
-    const tweets = await pool.query(query);
+    const query = `SELECT tweets.*, users.username, users.fullname, (SELECT COUNT(like_id) FROM likes WHERE tweet_id = tweets.id ) AS likes, ( SELECT CASE WHEN likes.user_id = users.id AND likes.tweet_id = tweets.id THEN 'true' ELSE 'false' END dolike FROM likes) as doLike FROM tweets JOIN users ON user_id = users.id WHERE users.id = ${user_id} OR user_id = (SELECT user_followed FROM follows WHERE user_follower = ${user_id}) ORDER BY tweets.id DESC`
+    tweets = await pool.query(query);
+
+    tweets.forEach( async (element, index) => {
+        const comments = await pool.query(`SELECT comments.*, users.username, users.fullname FROM comments JOIN users ON userid = users.id WHERE tweetid = ${element.id}`);
+        tweets[index].comments = comments;
+    });
     try {
         const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${user_id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${user_id}) as following`;
         const stats = await pool.query(query);
@@ -46,7 +51,7 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
                 pool.query(query, (err, result) => {
                     if (err) throw err;
                     stats = result[0];
-                    pool.query(`SELECT * FROM tweets JOIN users ON user_id = users.id WHERE users.username = '${username}' ORDER BY tweets.id DESC `, (err, result) => {
+                    pool.query(`SELECT tweets.*, users.username, users.fullname, (SELECT COUNT(like_id) FROM likes WHERE tweet_id = tweets.id ) AS likes, ( SELECT CASE WHEN likes.user_id = users.id AND likes.tweet_id = tweets.id THEN 'true' ELSE 'false' END dolike FROM likes) as doLike FROM tweets JOIN users ON user_id = users.id WHERE users.username = '${username}' ORDER BY tweets.id DESC `, (err, result) => {
                         if (err) throw err;
                         tweets = result;
                         res.render('usertweets', { tweets, _user: profile, stats, isFollowing });
