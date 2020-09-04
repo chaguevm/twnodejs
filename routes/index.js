@@ -12,10 +12,12 @@ router.get('/', isLoggedIn, async (req, res) => {
         const comments = await pool.query(`SELECT comments.*, users.username, users.fullname FROM comments JOIN users ON userid = users.id WHERE tweetid = ${element.id}`);
         tweets[index].comments = comments;
     });
+
+    const usernotfolloweds = await pool.query(`SELECT users.id, users.username, users.fullname, users.description FROM users WHERE users.id NOT IN (SELECT follows.user_followed FROM follows WHERE user_follower = ${user_id}) AND users.id != ${user_id}`);
     try {
         const query = `SELECT (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = ${user_id}) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = ${user_id}) as following`;
         const stats = await pool.query(query);
-        res.render('tweets', { tweets, stats: stats[0] });
+        res.render('tweets', { tweets, stats: stats[0], usernotfolloweds });
     } catch (error) {
         console.error(err);
     }

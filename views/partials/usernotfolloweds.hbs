@@ -1,0 +1,21 @@
+<div class="card">
+    <div class="card-header">
+        <div class="h5 text-center">Recommended users</div>
+    </div>
+</div>
+{{#each usernotfolloweds}}
+<div class="card gedf-card">
+    <div class="card-body">
+        <div class="d-flex justify-content-start align-items-center">
+            <div class="mr-2">
+                <img class="rounded-circle" width="70" src="https://picsum.photos/50/50" alt="">
+            </div>
+            <div class="ml-2">
+                <div class="h5 m-0"><a href="/profile/{{username}}">@{{username}}</a></div>
+                <div class="h7 text-muted">{{fullname}} </div>
+                <div class="h7">{{description}}</div>
+            </div>
+        </div>
+    </div>
+</div>
+{{/each}}
