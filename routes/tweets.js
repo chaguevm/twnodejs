@@ -8,12 +8,14 @@ router.post('/tweet', async (req,res) => {
     const tw = req.body.tweet;
     const regex = /[#]+([A-Za-z0-9-_]+)/gi;
     const matches = tw.match(regex);
-    matches.forEach(async element => {
-        const exist = await pool.query(`SELECT * FROM hashtags WHERE hashtag = '${element}'`);
-        if(exist.length === 0){
-            const ht = await pool.query(`INSERT INTO hashtags (hashtag) VALUES ('${element}') `);
-        }
-    });
+    if(matches){
+        matches.forEach(async element => {
+            const exist = await pool.query(`SELECT * FROM hashtags WHERE hashtag = '${element}'`);
+            if(exist.length === 0){
+                const ht = await pool.query(`INSERT INTO hashtags (hashtag) VALUES ('${element}') `);
+            }
+        });
+    }
     const tweet = await pool.query('INSERT INTO tweets SET ? ',[req.body]);
     res.redirect('/');
 });
@@ -35,5 +37,6 @@ router.post('/comment/:id', async (req, res) => {
     const comment = await pool.query(`INSERT INTO comments (comment, tweetid, userid) VALUES ('${req.body.comment}', ${id}, ${req.user.id})`);
     res.redirect(req.get('referer'));
 });
+
 
 module.exports = router;

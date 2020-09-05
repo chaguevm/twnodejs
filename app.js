@@ -20,6 +20,19 @@ Handlebars.registerHelper('ifCond', function(v1, v2, options) {
     return options.inverse(this);
 });
 
+Handlebars.registerHelper('tw', function(v) {
+    const regex = /[#]+([A-Za-z0-9-_]+)/gi;
+    const match = v.match(regex);
+    if(match){
+        match.forEach(ht => {
+
+            const nht = `<a href='/hashtags/${ht.replace('#','')}'>${ht}</a>`;
+            v = v.replace(ht, nht);
+        });
+    }
+    return v;
+});
+
 //Configuración
 app.use(express.static('./public/'));
 app.set('port', process.env.PORT || 3000); //puerto
