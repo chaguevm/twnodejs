@@ -68,6 +68,10 @@ router.get('/profile/:username', isLoggedIn, (req, res) => {
                     pool.query(`SELECT tweets.*, users.username, users.fullname, (SELECT COUNT(like_id) FROM likes WHERE tweet_id = tweets.id ) AS likes, ( SELECT CASE WHEN likes.user_id = users.id AND likes.tweet_id = tweets.id THEN 'true' ELSE 'false' END dolike FROM likes) as doLike FROM tweets JOIN users ON user_id = users.id WHERE users.username = '${username}' ORDER BY tweets.id DESC `, (err, result) => {
                         if (err) throw err;
                         tweets = result;
+                        tweets.forEach( async (element, index) => {
+                            const comments = await pool.query(`SELECT comments.*, users.username, users.fullname FROM comments JOIN users ON userid = users.id WHERE tweetid = ${element.id}`);
+                            tweets[index].comments = comments;
+                        });
                         res.render('usertweets', { tweets, _user: profile, stats, isFollowing, hashtags, usernotfolloweds });
                     });
                 });
