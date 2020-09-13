@@ -36,4 +36,10 @@ router.get('/followings/:username', isLoggedIn, async (req, res) => {
     res.render('search', {stats: stats[0], statics: followeds});
 });
 
+router.get('/recomendedusers/', isLoggedIn, async (req, res) => {
+    const user_id = req.user.id;
+    const usernotfolloweds = await pool.query(`SELECT users.id, users.username, users.fullname, users.description FROM users WHERE users.id NOT IN (SELECT follows.user_followed FROM follows WHERE user_follower = ${user_id}) AND users.id != ${user_id}`);
+    res.json(usernotfolloweds);
+});
+
 module.exports = router;

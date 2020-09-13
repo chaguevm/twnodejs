@@ -1,10 +1,8 @@
-<div class="card gedf-card">
+<div class="card gedf-card" id="hashtags">
     <div class="card-header">
         <div class="h5 text-center">Hashtags</div>
     </div>
-    {{#each hashtags}}
-    <div class="card-body">
-        <h5 class="card-title">{{#tw hashtag}}{{/tw}}</h5>
+    <div v-for="hashtag in hashtags " class="card-body">
+        <h5 class="card-title"><a :href="'/hashtags/' + hashtag.hashtag.replace('#', '')"> \{{hashtag.hashtag}} </a></h5>
     </div>
-    {{/each}}
 </div>
