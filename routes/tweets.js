@@ -4,32 +4,23 @@ const pool = require('../database');
 const { isLoggedIn } = require('../lib/auth');
 const Tweet = require('../models/tweets');
 
-router.post('/tweet', Tweet.create);
-
-router.get('/tweets', Tweet.listAll);
-
-router.get('/follow/:user_id', async (req, res) => {
-    const { user_id } = req.params;
-    const follow = await pool.query(`INSERT INTO follows (user_follower, user_followed) VALUES (${req.user.id},${user_id})`);
-    res.redirect(req.get('referer'));
-});
-
-router.get('/likes/:id', async (req, res) => {
-    const { id } = req.params;
-    const like = await pool.query(`INSERT INTO likes (tweet_id, user_id) VALUES (${id}, ${req.user.id})`);
-    res.redirect(req.get('referer'));
-});
-
-router.post('/comment/:id', async (req, res) => {
-    const { id } = req.params;
-    const comment = await pool.query(`INSERT INTO comments (comment, tweetid, userid) VALUES ('${req.body.comment}', ${id}, ${req.user.id})`);
-    res.redirect(req.get('referer'));
-});
-
-router.get('/hashtags', async (req, res) => {
-    const hashtags = await pool.query(`SELECT * FROM hashtags ORDER BY id DESC LIMIT 10`);
-    res.json(hashtags);
-});
-
+//Nuevo tweet
+router.post('/tweet', isLoggedIn, Tweet.create);
+//Listar los tweet del usuario logueado
+router.get('/tweets', isLoggedIn, Tweet.listAll);
+//Listar los tweet de un usuario consultado
+router.get('/tweets/:username', isLoggedIn, Tweet.listByUsername);
+//Dejar un comentario en un tweet
+router.post('/comments/:id', isLoggedIn, Tweet.addCommentToPost);
+//Consultar los comentarios de un tweet
+router.get('/comments/:id', isLoggedIn, Tweet.getCommentFromPost);
+//Dejar un like a un tweet
+router.get('/like/:id', isLoggedIn, Tweet.like);
+//Quitar el like a un tweet
+router.delete('/unlike/:id', isLoggedIn, Tweet.unLike);
+//Conseguir los ultimos 10 HT
+router.get('/hashtags', isLoggedIn, Tweet.listHashtags);
+//Consultar los tweet de un HT
+router.get('/hashtags/:hashtag', isLoggedIn, Tweet.listTweetsFromHt);
 
 module.exports = router;
