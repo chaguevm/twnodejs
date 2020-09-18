@@ -11,15 +11,23 @@ router.post('/signup' , isNotLoggedIn, passport.authenticate('local.signup',{
     res.json({code: 200, success: 'Registered'});
 });
 
-//Login de usuario
-router.post('/login', isNotLoggedIn, (req, res, next) => {
+//Login con custom Callback
+//Se pasa el passport.authenticate dentro del manejador de la ruta, se pasa
+//un callback al authentica para manejar el error y los mensajes personalizados,
+//se usa el req.logIn para validar la respuesta y generar el req.user
+router.post('/login' , isNotLoggedIn, (req, res, next) => {
     passport.authenticate('local.login', (err, user, flash) => {
         if(err)
-            return next(err); //Si hay error sigue con el error
+            next(err); //Si hay un error en la ejecucion o con la DB
         if(!user)
-            return res.json({code: 404, message: flash}); //Si el usuario o la clave son incorrectas rectorna 404 con el mensaje de error
-        return res.json({code: 200, success: flash}); //Si el usuario y pass son correctos da codigo 200 y mensaje de bienvenida
+            return res.json({code: 404, message: flash}); //Retorna el error en caso de tener un error con el usuario o la contraseña
+        req.logIn(user, (err) => { 
+            if (err) 
+                next(err); //error en la ejecución
+            return res.json({code: 200, success: flash}); //Retorna el code 200 y el mensaje de logueado
+        });
     })(req, res, next);
+    //console.log(response);
 });
 
 //Cerrar sesion

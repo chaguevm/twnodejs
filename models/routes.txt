@@ -1,0 +1,51 @@
+Index 
+
+  - Carga post del usuario logueado + post de los usuario que sigue el usuario logueado + comentarios
+
+Perfil
+   - Carga post del usuario consultados + comentarios
+
+Busqueda (Usuario)
+
+   - Carga los usuarios consultadoss
+
+Busqueda (HT)
+   
+   - Carga los post que contienen ese HTs
+
+Comunes 
+    - Carga información del usuario logueado *En la mayoria de casos excepto cuando se consulta otro usuario
+    - Carga de usuarios sugeridos
+    - Carga de los ultimos HT 
+
+Opcional
+
+    - Carga informacion del usuario consultado
+
+Rutas
+
+--Usuarios
+
+  POST /login - Inicio de sesion - Listo
+  GET  /logout - Cerrar sesion - Listo
+  POST /register - Registrar nuevo usuario - Listo
+  GET /profile/ ? - Consulta la informacion del usuario
+  PUT /edit/:user_id - Editar informacion del usuario - Listo
+  GET /followers/:username - Listar los usuarios que siguen al usuario consultado - Listo
+  GET /followings/:username - Listar los usuarios a los que el usuario consultado sigue - Listo
+  GET /follow/:user_id - Sigue al usuario - Listo
+  DELETE /unfollow/:user_id - Deja de seguir al usuario - Listo
+  GET /recomendedusers - Consulta los usuarios que no ha seguido - Listo
+  POST /search/ - Hace una Busqueda de usuarios - Listo
+
+--Tweets
+
+  POST /tweet - Nuevo tweet - Listo
+  GET /tweets - Feed de tweets del usuario logueado - List
+  GET /tweets/:username - Feed de tweets del usuario consultado - Listo
+  POST /comments/:tweet_id - Deja un comentario en un tweet
+  GET /comments/:tweet_id - Consulta los comentarios de un tweet
+  GET /like/:tweet_id - Da like a un tweet
+  DELETE /unlike/:tweet_id - Quita el like a un tweet
+  GET /hashtags/ - Consulta los 10 HT mas recientes (deberia ser los mas usados)...
+  GET /hashtags/:hashtag - Consulta los tweets que contienen el HT 
