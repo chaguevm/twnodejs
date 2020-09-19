@@ -25,7 +25,7 @@ Tweet.create = async (req, res) => {
     }
 
     const tweet = await pool.query('INSERT INTO tweets SET ? ', [newtw]);
-    res.json({ code: 200, success: 'Tweet registrado' });
+    res.json({ code: 201, success: 'Tweet registrado' });
 }
 
 //Conseguir todos los tweets
@@ -55,7 +55,7 @@ Tweet.listByUsername = async (req, res) => {
 Tweet.addCommentToPost = async (req, res) => {
     const { id } = req.params;
     const comment = await pool.query(`INSERT INTO comments (comment, tweetid, userid) VALUES ('${req.body.comment}', ${id}, ${req.user.id})`);
-    res.json({ code: 200, success: "Coment add"});
+    res.json({ code: 201, success: "Coment add"});
 }
 
 //Conseguir los comentarios de un tweet
@@ -69,7 +69,7 @@ Tweet.getCommentFromPost = async (req, res) => {
 Tweet.like = async (req, res) =>{
     const { id } = req.params;
     const like = await pool.query(`INSERT INTO likes (tweet_id, user_id) VALUES (${id}, ${req.user.id})`);
-    res.json({code: 200, success: "Like"});
+    res.json({code: 201, success: "Like"});
 }
 
 //Consulta si el tweet ya tiene like del usuario

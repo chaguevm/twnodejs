@@ -9,7 +9,7 @@ User.edit = async (req, res) => {
     const { user_id } = req.params;
     const query = `UPDATE users SET username = '${req.body.username}', fullname = '${req.body.fullname}', description = '${req.body.description}' WHERE id = ${user_id}`;
     const user = await pool.query(query);
-    res.json({code: 200, success: "User edited"});
+    res.json({code: 201, success: "User edited"});
 }
 
 //Buscar todos los usuarios que coincidan con la busqueda
@@ -24,7 +24,7 @@ User.search = async (req, res) => {
 User.follow = async (req, res) => {
     const { user_id } = req.params;
     const follow = await pool.query(`INSERT INTO follows (user_follower, user_followed) VALUES (${req.user.id},${user_id})`);
-    res.json({code: 200, success: "Follow"});
+    res.json({code: 201, success: "Follow"});
 }
 
 //Dejar de seguir a un usuario
@@ -54,7 +54,7 @@ User.followings = async (req, res) => {
 User.recommendedUsers = async (req, res) => {
     const user_id = req.user.id;
     const usernotfolloweds = await pool.query(`SELECT users.id, users.username, users.fullname, users.description FROM users WHERE users.id NOT IN (SELECT follows.user_followed FROM follows WHERE user_follower = ${user_id}) AND users.id != ${user_id}`);
-    res.json(usernotfolloweds);
+    res.json({code: 200, usernotfolloweds});
 }
 
 module.exports = User;

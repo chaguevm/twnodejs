@@ -20,7 +20,7 @@ router.post('/login' , isNotLoggedIn, (req, res, next) => {
         if(err)
             next(err); //Si hay un error en la ejecucion o con la DB
         if(!user)
-            return res.json({code: 404, message: flash}); //Retorna el error en caso de tener un error con el usuario o la contraseña
+            return res.json({code: 401, message: flash}); //Retorna el error en caso de tener un error con el usuario o la contraseña
         req.logIn(user, (err) => { 
             if (err) 
                 next(err); //error en la ejecución
