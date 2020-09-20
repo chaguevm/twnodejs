@@ -8,6 +8,7 @@ const session = require('express-session');
 const MySQLStore = require('express-mysql-session');
 const { database } = require('./keys');
 const passport = require('passport');
+const cors = require('cors');
 
 //Inicialización
 const app = express();
@@ -37,6 +38,7 @@ Handlebars.registerHelper('tw', function(v) {
 app.use(express.static('./public/'));
 app.set('port', process.env.PORT || 3000); //puerto
 app.set('views',path.join(__dirname, 'views')); //seteo de la ruta donde estan las vistas
+app.use(cors({credentials: true, origin: 'http://localhost:8081'}));
 
 //configuracion del motor de plantillas
 app.engine('.hbs',exphbs({
