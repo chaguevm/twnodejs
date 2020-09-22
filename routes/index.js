@@ -5,7 +5,7 @@ const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 const User = require('../models/users');
 
 router.get('/', isLoggedIn, (req, res) => {
-    res.render('tweets');
+    res.json({code: 403, success: 'Already Logged'});
 });
 
 module.exports = router;

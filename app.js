@@ -38,7 +38,7 @@ Handlebars.registerHelper('tw', function(v) {
 app.use(express.static('./public/'));
 app.set('port', process.env.PORT || 3000); //puerto
 app.set('views',path.join(__dirname, 'views')); //seteo de la ruta donde estan las vistas
-app.use(cors({credentials: true, origin: 'http://localhost:8081'}));
+app.use(cors({credentials: true, origin: 'http://localhost:8080'}));
 
 //configuracion del motor de plantillas
 app.engine('.hbs',exphbs({
