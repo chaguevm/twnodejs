@@ -4,12 +4,23 @@ const passport = require('passport');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 
 //Registro de usuario
-router.post('/signup' , isNotLoggedIn, passport.authenticate('local.signup',{
+/*router.post('/signup' , isNotLoggedIn, passport.authenticate('local.signup',{
     failureRedirect: '/signup',
     failureFlash: true
 }), (req, res) => {
     res.json({code: 200, success: 'Registered'});
-});
+});*/
+
+router.post('/signup', isNotLoggedIn, (req, res, next) => {
+    passport.authenticate('local.signup', (err, user, flash) => {
+        if (err) 
+            next(err);
+        if(!user)
+            return res.json({code: 401, message: flash});
+        return res.json({code: 200, success: flash});
+    })(req, res, next);
+})
+
 
 //Login con custom Callback
 //Se pasa el passport.authenticate dentro del manejador de la ruta, se pasa
