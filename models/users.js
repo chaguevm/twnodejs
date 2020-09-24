@@ -3,6 +3,17 @@ const pool = require('../database');
 const passport = require('passport');
 const User = {}
 
+//Conseguir la info del usuario
+User.get = async (req, res) => {
+    const user_id = req.user.id;
+    const { username } = req.params;
+    if(username === undefined){
+        res.json({code: 200, user: req.user});    
+    }else{
+        const user = await pool.query(`SELECT users.id, users.username, users.fullname, users.description, (SELECT COUNT(user_follower) as cant FROM follows WHERE user_followed = users.id) as followers, (SELECT COUNT(user_followed) as cant FROM follows WHERE user_follower = users.id ) as followings FROM users WHERE users.username = '${username}'`);
+        res.json({code: 200, user: user[0]});
+    }
+}
 
 //Editar usuario
 User.edit = async (req, res) => {

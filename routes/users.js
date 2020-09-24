@@ -3,6 +3,8 @@ const pool = require('../database');
 const { isLoggedIn, isNotLoggedIn } = require('../lib/auth');
 const User = require('../models/users');
 
+//Conseguir info del usuario
+router.get('/user/:username?', isLoggedIn, User.get);
 //Editar usuario
 router.post('/edit/:user_id', isLoggedIn, User.edit);
 //Seguidores
