@@ -1,8 +1,8 @@
 module.exports = {
     database: {
-        host: 'localhost',
-        user: 'root',
-        password: '123456',
-        database: 'twitter'
+        host: process.env.DB_HOST || 'localhost',
+        user: process.env.USER_DB || 'root',
+        password: process.env.DB_PASS || '',
+        database: process.env.DB_NAME || 'twitter'
     }
 }
