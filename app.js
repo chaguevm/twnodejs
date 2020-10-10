@@ -37,7 +37,7 @@ Handlebars.registerHelper('tw', function(v) {
 //Configuración
 app.set('port', process.env.PORT || 3000); //puerto
 app.set('views',path.join(__dirname, 'views')); //seteo de la ruta donde estan las vistas
-app.use(cors({credentials: true, origin: 'http://localhost:8080'}));
+//app.use(cors({credentials: true, origin: 'http://localhost:8080'}));
 
 //configuracion del motor de plantillas
 app.engine('.hbs',exphbs({
@@ -63,6 +63,14 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
+
+app.use(function(req, res, next) {
+    res.header('Access-Control-Allow-Credentials', true);
+    res.header('Access-Control-Allow-Origin', req.headers.origin);
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept');
+    next();
+});
 
 //Variables Globales
 app.use((req, res, next) => {
