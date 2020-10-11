@@ -51,6 +51,7 @@ app.set('view engine', '.hbs');
 
 
 //Middleware
+app.set('trust proxy', 1)
 app.use(session({
     secret: 'linksappnodesession',
     resave: false,
