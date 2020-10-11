@@ -55,12 +55,6 @@ app.use(session({
     secret: 'linksappnodesession',
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        secure: true,
-        httpOnly: true,
-        sameSite: 'none',
-        maxAge: 60 * 60 * 24 * 1000
-    },
     store: new MySQLStore(database)
 }));
 app.use(flash());
