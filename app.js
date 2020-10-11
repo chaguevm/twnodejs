@@ -57,6 +57,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         httpOnly: true,
+        sameSite: 'none',
         maxAge: 60 * 60 * 24 * 1000
     },
     store: new MySQLStore(database)
