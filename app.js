@@ -55,6 +55,7 @@ app.use(session({
     secret: 'linksappnodesession',
     resave: false,
     saveUninitialized: false,
+    cookie: { sameSite: 'strict' },
     store: new MySQLStore(database)
 }));
 app.use(flash());
