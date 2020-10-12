@@ -15,5 +15,7 @@ router.get('/followings/:username', isLoggedIn, User.followings);
 router.get('/recomendedusers/', isLoggedIn, User.recommendedUsers);
 //Buscar un usuario
 router.post('/search', User.search);
+//Conocer si se puede seguir o ya se sigue al usuario
+route.get('/canFollow/:followed', isLoggedIn, User.canFollow);
 
 module.exports = router;

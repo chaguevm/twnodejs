@@ -68,4 +68,11 @@ User.recommendedUsers = async (req, res) => {
     res.json({code: 200, usernotfolloweds});
 }
 
+User.canFollow = async (req, res) => {
+    const { followed } = req.params;
+    const follower  = req.user.id;  
+    const canFollow = await pool.query(`SELECT * FROM follows WHERE user_follower = ${follower} AND user_followed = ${followed}`);
+    res.json({code: 200, canFollow});
+}
+
 module.exports = User;
