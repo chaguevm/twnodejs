@@ -61,7 +61,7 @@ Tweet.addCommentToPost = async (req, res) => {
 //Conseguir los comentarios de un tweet
 Tweet.getCommentFromPost = async (req, res) => {
     const { id } = req.params;
-    const comments = await pool.query(`SELECT comments.*, users.username, users.fullname FROM comments JOIN users ON userid = users.id WHERE tweetid = ${id}`);
+    const comments = await pool.query(`SELECT comments.*, users.username, users.fullname FROM comments JOIN users ON userid = users.id WHERE tweetid = ${id} ORDER BY comments.id DESC`);
     res.json({code: 200, comments});
 }
 
