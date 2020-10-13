@@ -18,8 +18,8 @@ router.post('/search', User.search);
 //Conocer si se puede seguir o ya se sigue al usuario
 router.get('/canFollow/:followed', isLoggedIn, User.canFollow);
 //Hacer follow
-router.post('/follow/:user_id', isLoggedIn, User.follow);
+router.get('/follow/:user_id', isLoggedIn, User.follow);
 //Hacer unFollow
-router.post('/unfollow/:user_id', isLoggedIn, User.unfollow);
+router.get('/unfollow/:user_id', isLoggedIn, User.unfollow);
 
 module.exports = router;
